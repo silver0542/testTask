@@ -62,7 +62,7 @@ export const uploadFile = async (file: File, key: string, folderID: string) => {
     );
 
     const uploadResult = await uploadResponse.json();
-    console.log(uploadResult);
+    // console.log(uploadResult);
     if (uploadResult.status !== "ok") {
       // throw new Error(`Failed to upload file: ${uploadResult.message}`);
       console.log("Error uploading");
