@@ -9,8 +9,6 @@
     <q-toolbar class="container">
       <q-toolbar-title>
         <NuxtLink :to="{ path: '/' }">
-          <!-- src="https://cdn-incjn.nitrocdn.com/YiJqAkzLnrtSuyaPgzVoFoSvzguzObnS/assets/images/source/rev-dbdf381/redwerk.com/wp-content/uploads/2022/08/logo_txt-1.svg" -->
-
           <q-img
             :src="logo"
             spinner-color="red"

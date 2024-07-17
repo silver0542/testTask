@@ -219,6 +219,13 @@
         <q-btn label="Submit" type="submit" size="lg" color="primary" />
       </div>
     </Form>
+
+    <q-inner-loading
+      :showing="loaderVisability"
+      label="Please wait..."
+      label-class="text-teal"
+      label-style="font-size: 1.1em"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -240,6 +247,7 @@ const candidate = ref<ICandidate>({
   resume_file: "",
   github_url: "",
 });
+const loaderVisability = ref<boolean>(false);
 const props = defineProps({
   candidate: {
     type: Object as PropType<ICandidate>,
@@ -349,6 +357,7 @@ const onSubmit = async (
   values: any,
   { resetForm }: { resetForm: () => void }
 ): Promise<void> => {
+  loaderVisability.value = true;
   const dismiss: (props?: QNotifyUpdateOptions | undefined) => void = $q.notify(
     {
       spinner: true,
@@ -386,10 +395,12 @@ const onSubmit = async (
         message: "Failed ",
         type: "negative",
       });
+      loaderVisability.value = false;
     } else {
       dismiss();
 
       setTimeout(() => {
+        loaderVisability.value = false;
         router.push({ path: "/" });
       }, 3000);
       $q.notify({
@@ -401,6 +412,7 @@ const onSubmit = async (
         timeout: 3000,
         onDismiss: () => {
           router.push({ path: "/" });
+          loaderVisability.value = false;
         },
       });
       if (!props.editMode) {
@@ -414,6 +426,7 @@ const onSubmit = async (
       message: "Failed ",
       type: "negative",
     });
+    loaderVisability.value = false;
   }
 };
 

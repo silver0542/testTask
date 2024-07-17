@@ -1,5 +1,20 @@
 <template>
   <q-page class="container">
+    <div class="my-card q-pa-md q-mt-md q-mx-auto" style="max-width: 80%">
+      <q-item tag="label" v-ripple>
+        <q-item-section>
+          <q-item-label>Table Component Dev Mode</q-item-label>
+        </q-item-section>
+        <q-item-section avatar>
+          <q-toggle color="blue" v-model="devMode" val="true" />
+        </q-item-section>
+      </q-item>
+    </div>
+    <q-slide-transition>
+      <div v-show="devMode">
+        <DevSettings @updateDevValues="updateDev" />
+      </div>
+    </q-slide-transition>
     <DataTable
       :headLine="columns"
       v-if="candidates"
@@ -7,9 +22,9 @@
       :per_page="candidates.per_page"
       :page="candidates.page"
       :total_rows="candidates.total"
-      :showSearch="true"
-      :checkboxes="true"
-      :showAddButton="true"
+      :showSearch="devProps.showSearch"
+      :checkboxes="devProps.checkboxes"
+      :showAddButton="devProps.showAddButton"
       :selectedValues="selectedValues"
       @addButtonEvent="addClickHandle()"
       @editButtonEvent="editClickHandle($event)"
@@ -28,11 +43,10 @@
     >
       <CandidateForm :candidate="candidatePreview" :previewMode="true" />
     </PopUp>
-    <q-btn @click="editClickHandle(89)" label="unselect"></q-btn>
   </q-page>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useCandidateStore } from "~/stores/candidatesStore";
 import { QTable, useQuasar } from "quasar";
 import type { QVueGlobals, QNotifyUpdateOptions } from "quasar";
@@ -59,6 +73,12 @@ const { data: candidates } = await useAsyncData(
     return <ICandidateState>fetching;
   }
 );
+const devMode = ref<boolean>(false);
+const devProps = ref({
+  showSearch: true,
+  checkboxes: true,
+  showAddButton: true,
+});
 
 const columns: QTable["columns"] = [
   {
@@ -231,9 +251,11 @@ const closePreview = (): void => {
 const unselect = (): void => {
   selectedValues.value = [];
 };
-
 const selectHandler = (data: ICandidate[]): void => {
   console.log("Emit:", data);
   selectedValues.value = data;
+};
+const updateDev = (data: any): void => {
+  devProps.value = data;
 };
 </script>
