@@ -19,6 +19,7 @@
       @onRequest="updateData($event)"
       @onSearch="searchCandidate($event)"
       @rowClick="preview($event)"
+      @onSelect="selectHandler($event)"
     />
     <PopUp
       v-bind="{ ...popUpData }"
@@ -27,6 +28,7 @@
     >
       <CandidateForm :candidate="candidatePreview" :previewMode="true" />
     </PopUp>
+    <q-btn @click="editClickHandle(89)" label="unselect"></q-btn>
   </q-page>
 </template>
 <script setup lang="ts">
@@ -99,7 +101,8 @@ const addClickHandle = (): void => {
   router.push({ path: "/candidate/add" });
 };
 const editClickHandle = (id: number): void => {
-  router.push({ path: `/candidate/edit/${id}` });
+  router.push({ name: "candidate-edit-id", params: { id: id } });
+  // router.push({ path: `/candidate/edit/${id}` });
 };
 const deleteClickHandle = (candidate: ICandidate): void => {
   let dismiss: (props?: QNotifyUpdateOptions | undefined) => void = $q.notify({
@@ -196,9 +199,7 @@ const confirmHandle = async (ids: number[]): Promise<void> => {
     }
   }
 };
-const unselect = (): void => {
-  selectedValues.value = [];
-};
+
 const paginationHandler = (event: any): void => {
   candidatesStore.setPagination(event.rowsPerPage, event.page);
   if (candidates && candidates.value) {
@@ -226,5 +227,13 @@ const preview = (data: ICandidate): void => {
 const closePreview = (): void => {
   popUpData.value.visible = false;
   popUpData.value.title = "";
+};
+const unselect = (): void => {
+  selectedValues.value = [];
+};
+
+const selectHandler = (data: ICandidate[]): void => {
+  console.log("Emit:", data);
+  selectedValues.value = data;
 };
 </script>

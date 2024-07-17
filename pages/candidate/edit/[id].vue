@@ -17,7 +17,7 @@ const candidatesStore = useCandidateStore();
 const route = useRoute();
 const id = route.params.id;
 
-const { data: candidate } = await useAsyncData("candidates", async () => {
+const { data: candidate } = await useAsyncData("candidate", async () => {
   let candidateFetching = await candidatesStore.getCandidate(Number(id));
   return candidateFetching;
 });

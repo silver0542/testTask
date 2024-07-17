@@ -98,6 +98,7 @@ const $emit = defineEmits([
   "onRequest",
   "onSearch",
   "rowClick",
+  "onSelect",
 ]);
 const props = defineProps({
   headLine: {
@@ -135,14 +136,30 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  selectedValues: {
+    type: Array,
+    default: [],
+  },
 });
 
 const filter = ref<string>("");
 const selected = ref<ICandidate[]>([]);
 
-watch(filter, async (newParam, oldPAram): Promise<void> => {
+watch(filter, async (newParam, oldParam): Promise<void> => {
   $emit("onSearch", newParam);
 });
+
+watch(selected, async (newParam, oldParam): Promise<void> => {
+  $emit("onSelect", newParam);
+});
+watch(
+  () => props.selectedValues,
+  (newParam, oldParam) => {
+    if (newParam.length == 0 && oldParam.length !== 0) {
+      selected.value = [];
+    }
+  }
+);
 
 const removeItem = (item: ICandidate): void => {
   $emit("deleteButtonEvent", item);
